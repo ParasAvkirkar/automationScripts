@@ -29,6 +29,10 @@ def smooth_scores(scores, window_size=5):
 
     return new_scores
 
+def write_scores(scores):
+    with open("score_history.csv", 'w') as f:
+        for race_num, wpm in scores:
+            f.write(",".join(str(v) for v in [race_num, wpm]) + "\n")
 
 text = ""
 with open("scoreinput.txt", "r") as f:
@@ -49,12 +53,16 @@ scores = scores.items()
 scores = sorted(scores, key=lambda tuple: tuple[0])
 
 print(str(scores[-10:]))
+write_scores(scores)
+
 min, max = get_min_max(scores)
-scores = smooth_scores(scores, 20)
+scores = smooth_scores(scores, 10)
 
 plt.plot([score[0] for score in scores], [score[1] for score in scores])
 
 plt.yticks(np.arange(min, max, 5))
 
 plt.show()
+
+
 
